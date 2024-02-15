@@ -1,3 +1,15 @@
+## This project explains how to dockerize nextjs
+
+#### first create a nextjs project using following command.
+
+    npx create-next-app <nameofapp>
+
+#### Dockerfile has following steps
+
+section 1: use node:18.3.0-alpine as base image abd build the code
+
+section 2: create the production image
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
