@@ -1,21 +1,80 @@
-# Node.js with React
-# Build a Node.js project that uses React.
-# Add steps that analyze code, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
-
 trigger:
-- main
+  branches:
+    include:
+      - main
+  paths:
+    include:  
+      - src
 
-pool:
-  vmImage: ubuntu-latest
+pool: 
+  name: "Azure Pipelines"
+  vmImage: ubuntu-20.04
 
-steps:
-- task: NodeTool@0
-  inputs:
-    versionSpec: '10.x'
-  displayName: 'Install Node.js'
+variables:
+ - template: env.yaml
+stages:
+  - stage: ci
+    displayName: Build
+    jobs:
+      - job: build_docker_image 
+        steps:
+          - task: Docker@2
+            displayName: Docker Build
+            inputs:
+              containerRegistry: '$(container_registry)'
+              repository: '$(image_repo)'
+              command: 'build'
+              Dockerfile: '$(Build.SourcesDirectory)/nextjssample/Dockerfile'
+              buildContext: '$(Build.SourcesDirectory)/nextjssample'
+              arguments: '--no-cache'
 
-- script: |
-    npm install
-    npm run build
-  displayName: 'npm install and build'
+          - task: Docker@2
+            displayName: Docker Push
+            inputs:
+              containerRegistry: "$(container_registry)"
+              repository: "$(image_repo)"
+              command: 'push'
+              tags: $(Build.BuildId)
+  - stage: cd
+    displayName: Deploy to CAE   
+    dependsOn: ci
+    condition: succeeded()
+
+    jobs:
+      - deployment: CDJob
+        displayName: CD
+        environment: "Dev"
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+              - checkout: self
+              - task: replacetokens@5
+                inputs:
+                  rootDirectory: "$(System.DefaultWorkingDirectory)/pipeline"
+                  targetFiles: 'capptemplate.yaml'
+                  tokenPattern: 'custom'
+                  tokenPrefix: '${'
+                  tokenSuffix: '}$'
+                  actionOnMissing: 'fail'
+              - task: AzureCLI@2
+                displayName: Deploy Container APP
+                inputs:
+                  azureSubscription: 'CAE-demo'
+                  scriptType: 'pscore'
+                  scriptLocation: 'inlineScript'
+                  inlineScript: |
+                    az extension add --name containerapp --upgrade
+                    az provider register --namespace Microsoft.App
+                    az provider register --namesoace Microsoft.OperationalInsights
+                    
+                    if((az containerapp list --environment "dev-cae" | ConvertFrom-Json).Name -contains "democapp")
+                    {
+                    Write-Host "Container app found"
+                    az containerapp update --name "democapp" --resource-group "cae-rg" --yaml $(Build.SourcesDirectory)/pipeline/capptemplate.yaml
+                    }
+                    else
+                    {
+                    az containerapp create --name "democapp"  --resource-group "cae-rg" --yaml $(Build.SourcesDirectory)/pipeline/capptemplate.yaml
+                    }
+              
