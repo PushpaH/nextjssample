@@ -10,9 +10,19 @@ section 1: use node:18.3.0-alpine as base image abd build the code
 
 section 2: create the production image
 
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+#### nodejs version use for sample --> Node.js 18.3.0
 
-## Getting Started
+### How to build docker locally
+
+#### cd to folder with Dockerfile and run following command
+
+    docker build -t <nameforimage>:<tag> .
+
+#### use following command to run docker container locally
+
+    docker run -p <portforwrd> --name <containername> <nameforimage>:<tag>
+
+This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 First, run the development server:
 

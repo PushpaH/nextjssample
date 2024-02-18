@@ -1,4 +1,4 @@
-FROM node:18.3.0-alpine as build
+FROM node:21-alpine as build
 
 WORKDIR /app
 
@@ -10,9 +10,9 @@ COPY . .
 
 RUN npm run build
 
-------------Create a prod image----------------
+# ------------Create a prod image----------------
 
-FROM node:18.3.0-alpine
+FROM node:21-alpine
 WORKDIR /app
 COPY --from=build /app/package.json ./
 COPY --from=build /app/.next ./.next
