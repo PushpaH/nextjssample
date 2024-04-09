@@ -32,5 +32,9 @@ jobs:
       #         docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/sampleapp:${{ github.sha }}
 
       - name: "Script"
+        id: ls_test
         run: |
           ls -l
+
+      - shell: pwsh
+        run: echo '${{ steps.ls_test.outputs.result }}'
