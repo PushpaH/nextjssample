@@ -30,7 +30,7 @@ jobs:
         username: ${{ secrets.REGISTRY_USERNAME }}
         password: ${{ secrets.REGISTRY_PASSWORD }}
     - run: |
-            docker build -f ./Dockerfile --tag sampleapp:${{ github.sha }} --label my-label .
+            docker build -t sampleapp:${{ github.sha }} -f "./src/Dockerfile"
             docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/sampleapp:${{ github.sha }}
 
 
