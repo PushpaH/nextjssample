@@ -30,8 +30,9 @@ jobs:
         username: ${{ secrets.REGISTRY_USERNAME }}
         password: ${{ secrets.REGISTRY_PASSWORD }}
     - run: |
-            docker build -t sampleapp:${{ github.sha }} "./Dockerfile"
+            docker build . --file Dockerfile --tag sampleapp:${{ github.sha }}
             docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/sampleapp:${{ github.sha }}
+
 
 
       
