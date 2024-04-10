@@ -33,7 +33,7 @@ jobs:
           docker build -t sampleapp:01 -f ./src/Dockerfile .
           docker image ls
           docker login ${{ secrets.REGISTRY_LOGIN_SERVER }} -u ${{ secrets.REGISTRY_USERNAME }} -p ${{ secrets.REGISTRY_PASSWORD }}
-          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/sampleapp:01
+          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/mydemo01/sampleapp:01
 
       # - name: "Script"
       #   id: ls_test
