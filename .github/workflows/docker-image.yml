@@ -32,6 +32,8 @@ jobs:
       - run: |
           docker build -t sampleapp:01 -f ./src/Dockerfile .
           docker image ls
+          docker tag sampleapp:01 democontainerapp.azurecr.io/mydemo01/sampleapp:01
+          docker image ls
           docker login ${{ secrets.REGISTRY_LOGIN_SERVER }} -u ${{ secrets.REGISTRY_USERNAME }} -p ${{ secrets.REGISTRY_PASSWORD }}
           docker push 'democontainerapp.azurecr.io/mydemo01/sampleapp:01'
 
