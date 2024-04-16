@@ -20,8 +20,8 @@ jobs:
 
       - uses: cschleiden/replace-tokens@v1
         with:
-          tokenPrefix: '#{'
-          tokenSuffix: '}#'
+          tokenPrefix: "#{"
+          tokenSuffix: "}#"
           files: '["**/.env.production"]'
         env:
           app_client_id: "This is prod client id"
@@ -38,12 +38,12 @@ jobs:
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
       - run: |
-          docker build -t sampleapp:01 -f ./src/Dockerfile .
+          docker build -t sampleapp:02 -f ./src/Dockerfile .
           docker image ls
-          docker tag sampleapp:01 tempacrdemo01.azurecr.io/mydemo01/sampleapp:01
+          docker tag sampleapp:02 tempacrdemo01.azurecr.io/mydemo01/sampleapp:02
           docker image ls
           docker login ${{ secrets.REGISTRY_LOGIN_SERVER }} -u ${{ secrets.REGISTRY_USERNAME }} -p ${{ secrets.REGISTRY_PASSWORD }}
-          docker push 'tempacrdemo01.azurecr.io/mydemo01/sampleapp:01'
+          docker push 'tempacrdemo01.azurecr.io/mydemo01/sampleapp:02'
 
       # - name: "Script"
       #   id: ls_test
