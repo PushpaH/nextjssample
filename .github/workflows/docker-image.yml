@@ -45,6 +45,7 @@ jobs:
           docker login ${{ secrets.REGISTRY_LOGIN_SERVER }} -u ${{ secrets.REGISTRY_USERNAME }} -p ${{ secrets.REGISTRY_PASSWORD }}
           docker push 'tempacrdemo01.azurecr.io/mydemo01/sampleapp:02'
 
+      #extra
       # - name: "Script"
       #   id: ls_test
       #   run: |
